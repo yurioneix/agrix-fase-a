@@ -1,7 +1,6 @@
 package com.betrybe.agrix.controller;
 
 import com.betrybe.agrix.controller.dto.FarmCreationDto;
-import com.betrybe.agrix.controller.dto.ResponseDTO;
 import com.betrybe.agrix.model.entities.Farm;
 import com.betrybe.agrix.service.FarmService;
 import com.betrybe.agrix.util.ModelDtoConverter;
