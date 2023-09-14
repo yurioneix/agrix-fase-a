@@ -1,6 +1,7 @@
 package com.betrybe.agrix.service;
 
 import com.betrybe.agrix.model.entities.Farm;
+import com.betrybe.agrix.model.repositories.CropRepository;
 import com.betrybe.agrix.model.repositories.FarmRepository;
 import com.betrybe.agrix.service.exception.FarmNotFoundException;
 import java.util.List;
@@ -14,10 +15,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class FarmService {
   private FarmRepository farmRepository;
+  private CropRepository cropRepository;
 
   @Autowired
-  public FarmService(FarmRepository farmRepository) {
+  public FarmService(FarmRepository farmRepository, CropRepository cropRepository) {
     this.farmRepository = farmRepository;
+    this.cropRepository = cropRepository;
   }
 
   /**
