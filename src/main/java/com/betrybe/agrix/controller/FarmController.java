@@ -6,11 +6,13 @@ import com.betrybe.agrix.model.entities.Farm;
 import com.betrybe.agrix.service.FarmService;
 import com.betrybe.agrix.util.ModelDtoConverter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,12 +31,25 @@ public class FarmController {
     this.farmService = farmService;
   }
 
+  /**
+   * Rota GET /farms.
+   */
   @GetMapping()
   public List<FarmDto> getAllFarms() {
     List<Farm> allFarm = farmService.getAllFarm();
     return allFarm.stream()
         .map((farm) -> new FarmDto(farm.getId(), farm.getName(), farm.getSize()))
         .collect(Collectors.toList());
+  }
+
+  /**
+   * Rota GET /farms/id.
+   */
+  @GetMapping("/{farmId}")
+  public ResponseEntity<Farm> getFarmById(@PathVariable Long farmId) {
+    Optional<Farm> optionalFarm = farmService.getFarmById(farmId);
+
+    return ResponseEntity.ok().body(optionalFarm.get());
   }
 
   /**
