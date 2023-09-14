@@ -1,5 +1,6 @@
 package com.betrybe.agrix.service;
 
+import com.betrybe.agrix.model.entities.Crop;
 import com.betrybe.agrix.model.entities.Farm;
 import com.betrybe.agrix.model.repositories.CropRepository;
 import com.betrybe.agrix.model.repositories.FarmRepository;
@@ -43,5 +44,20 @@ public class FarmService {
 
   public Farm createFarm(Farm farm) {
     return farmRepository.save(farm);
+  }
+
+  /**
+   * Método que cria um crop a partir do id de um farm.
+   */
+  public Farm createCropByFarmId(Long id, Crop crop) {
+    Optional<Farm> optionalFarm = farmRepository.findById(id);
+
+    if (optionalFarm.isEmpty()) {
+      throw new FarmNotFoundException();
+    }
+
+    cropRepository.save(crop);
+
+    return optionalFarm.get();
   }
 }
