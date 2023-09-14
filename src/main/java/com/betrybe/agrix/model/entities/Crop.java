@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 /**
@@ -17,15 +19,21 @@ public class Crop {
   private Long id;
   private String name;
   private double plantedArea;
+  @ManyToOne
+  @JoinColumn(name = "farm_id")
+  private Farm farm;
 
   /**
    * Construtor da classe Crop que recebe id, name e plantedArea.
    */
-  public Crop(Long id, String name, double plantedArea) {
+  public Crop(Long id, String name, double plantedArea, Farm farm) {
     this.id = id;
     this.name = name;
     this.plantedArea = plantedArea;
+    this.farm = farm;
   }
+
+  public Crop() {}
 
   public Long getId() {
     return id;
@@ -50,4 +58,13 @@ public class Crop {
   public void setPlantedArea(double plantedArea) {
     this.plantedArea = plantedArea;
   }
+
+  public Farm getFarm() {
+    return farm;
+  }
+
+  public void setFarm(Farm farm) {
+    this.farm = farm;
+  }
+
 }

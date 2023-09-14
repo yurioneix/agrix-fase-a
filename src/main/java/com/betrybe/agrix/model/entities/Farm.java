@@ -4,7 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.List;
 
 /**
  * Classe Farm.
@@ -17,18 +19,20 @@ public class Farm {
   private Long id;
   private String name;
   private double size;
+  @OneToMany(mappedBy = "farm")
+  private List<Crop> crops;
 
   /**
    * Construtor da classe Farm que recebe id, name e size.
    */
-  public Farm(Long id, String name, double size) {
+  public Farm(Long id, String name, double size, List<Crop> crops) {
     this.id = id;
     this.name = name;
     this.size = size;
+    this.crops = crops;
   }
 
-  public Farm() {
-  }
+  public Farm() {}
 
   public Long getId() {
     return id;
@@ -52,5 +56,13 @@ public class Farm {
 
   public void setSize(double size) {
     this.size = size;
+  }
+
+  public List<Crop> getCrops() {
+    return crops;
+  }
+
+  public void setCrops(List<Crop> crops) {
+    this.crops = crops;
   }
 }
