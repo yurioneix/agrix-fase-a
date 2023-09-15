@@ -36,9 +36,6 @@ public class FarmService {
    */
   public Optional<Farm> getFarmById(Long id) {
 
-    if (farmRepository.findById(id).isEmpty()) {
-      throw new FarmNotFoundException();
-    }
     return farmRepository.findById(id);
   }
 
@@ -49,15 +46,15 @@ public class FarmService {
   /**
    * Método que cria um crop a partir do id de um farm.
    */
-  public Farm createCropByFarmId(Long id, Crop crop) {
+  public Optional<Crop> createCropByFarmId(Long id, Crop crop) {
     Optional<Farm> optionalFarm = farmRepository.findById(id);
 
-    if (optionalFarm.isEmpty()) {
-      throw new FarmNotFoundException();
-    }
+    Farm farm = optionalFarm.get();
 
     cropRepository.save(crop);
 
-    return optionalFarm.get();
+    crop.setFarm(farm);
+
+    return Optional.of(crop);
   }
 }

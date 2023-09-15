@@ -1,5 +1,6 @@
 package com.betrybe.agrix.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +21,7 @@ public class Crop {
   private String name;
   private double plantedArea;
   @ManyToOne
+  @JsonIgnore
   @JoinColumn(name = "farm_id")
   private Farm farm;
 

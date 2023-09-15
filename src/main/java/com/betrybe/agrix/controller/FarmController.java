@@ -1,9 +1,13 @@
 package com.betrybe.agrix.controller;
 
+import com.betrybe.agrix.controller.dto.CropResponseDto;
 import com.betrybe.agrix.controller.dto.FarmCreationDto;
 import com.betrybe.agrix.controller.dto.FarmDto;
+import com.betrybe.agrix.model.entities.Crop;
 import com.betrybe.agrix.model.entities.Farm;
 import com.betrybe.agrix.service.FarmService;
+import com.betrybe.agrix.service.exception.CropNotFoundException;
+import com.betrybe.agrix.service.exception.FarmNotFoundException;
 import com.betrybe.agrix.util.ModelDtoConverter;
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +53,10 @@ public class FarmController {
   public ResponseEntity<Farm> getFarmById(@PathVariable Long farmId) {
     Optional<Farm> optionalFarm = farmService.getFarmById(farmId);
 
+    if (optionalFarm.isEmpty()) {
+      throw new FarmNotFoundException();
+    }
+
     return ResponseEntity.ok().body(optionalFarm.get());
   }
 
@@ -62,6 +70,31 @@ public class FarmController {
     Farm newFarm = farmService.createFarm(farmDtoToModel);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(newFarm);
+  }
+
+  /**
+   * Rota POST /{farmId}/crops para criar uma plantação a partir de uma fazenda.
+   */
+  @PostMapping("/{farmId}/crops")
+  public ResponseEntity<CropResponseDto> createCropByFarmId(
+      @PathVariable Long farmId,
+      @RequestBody Crop crop
+  ) {
+
+    Optional<Farm> optionalFarm = farmService.getFarmById(farmId);
+
+    if (optionalFarm.isEmpty()) {
+      throw new FarmNotFoundException();
+    }
+
+    farmService.createCropByFarmId(farmId, crop);
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(new CropResponseDto(
+        crop.getId(),
+        crop.getName(),
+        crop.getPlantedArea(),
+        crop.getFarm().getId()
+    ));
   }
 
 }

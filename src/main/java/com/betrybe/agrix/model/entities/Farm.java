@@ -12,7 +12,7 @@ import java.util.List;
  * Classe Farm.
  */
 @Entity
-@Table(name = "farm")
+@Table(name = "farms")
 public class Farm {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,7 +62,7 @@ public class Farm {
     return crops;
   }
 
-  public void setCrops(List<Crop> crops) {
-    this.crops = crops;
+  public void setCrops(Crop crop) {
+    this.crops.add(crop);
   }
 }
