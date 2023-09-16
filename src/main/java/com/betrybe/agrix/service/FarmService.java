@@ -4,6 +4,7 @@ import com.betrybe.agrix.model.entities.Crop;
 import com.betrybe.agrix.model.entities.Farm;
 import com.betrybe.agrix.model.repositories.CropRepository;
 import com.betrybe.agrix.model.repositories.FarmRepository;
+import com.betrybe.agrix.service.exception.CropNotFoundException;
 import com.betrybe.agrix.service.exception.FarmNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +42,21 @@ public class FarmService {
 
   public Farm createFarm(Farm farm) {
     return farmRepository.save(farm);
+  }
+
+  /**
+   * Método que retorna todas as plantações através do farmId.
+   */
+  public List<Crop> getCropsByFarmId(Long farmId) {
+    Optional<Farm> optionalFarm = farmRepository.findById(farmId);
+
+    if (optionalFarm.isEmpty()) {
+      throw new FarmNotFoundException();
+    }
+
+    Farm farm = optionalFarm.get();
+
+    return farm.getCrops();
   }
 
   /**

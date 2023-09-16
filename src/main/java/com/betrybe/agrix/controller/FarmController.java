@@ -5,6 +5,7 @@ import com.betrybe.agrix.controller.dto.FarmCreationDto;
 import com.betrybe.agrix.controller.dto.FarmDto;
 import com.betrybe.agrix.model.entities.Crop;
 import com.betrybe.agrix.model.entities.Farm;
+import com.betrybe.agrix.model.repositories.FarmRepository;
 import com.betrybe.agrix.service.FarmService;
 import com.betrybe.agrix.service.exception.CropNotFoundException;
 import com.betrybe.agrix.service.exception.FarmNotFoundException;
@@ -29,10 +30,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/farms")
 public class FarmController {
   private final FarmService farmService;
+  private final FarmRepository farmRepository;
 
   @Autowired
-  public FarmController(FarmService farmService) {
+  public FarmController(FarmService farmService, FarmRepository farmRepository) {
     this.farmService = farmService;
+    this.farmRepository = farmRepository;
   }
 
   /**
@@ -44,6 +47,24 @@ public class FarmController {
     return allFarm.stream()
         .map((farm) -> new FarmDto(farm.getId(), farm.getName(), farm.getSize()))
         .collect(Collectors.toList());
+  }
+
+  /**
+   * Rota GET /{farmId}/crops que retorna todas as plantações de uma fazenda.
+   */
+  @GetMapping("/{farmId}/crops")
+  public ResponseEntity<List<CropResponseDto>> getAllCropsByFarmId(@PathVariable Long farmId) {
+    List<Crop> crops = farmService.getCropsByFarmId(farmId);
+
+    List<CropResponseDto> listCropResponseDto = crops.stream()
+        .map((crop -> new CropResponseDto(
+            crop.getId(),
+            crop.getName(),
+            crop.getPlantedArea(),
+            crop.getFarm().getId()
+        ))).collect(Collectors.toList());
+
+    return ResponseEntity.status(HttpStatus.OK).body(listCropResponseDto);
   }
 
   /**
