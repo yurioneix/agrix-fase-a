@@ -19,9 +19,8 @@ public class Crop {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String name;
-  private double plantedArea;
+  private Double plantedArea;
   @ManyToOne
-  @JsonIgnore
   @JoinColumn(name = "farm_id")
   private Farm farm;
 
@@ -57,7 +56,7 @@ public class Crop {
     return plantedArea;
   }
 
-  public void setPlantedArea(double plantedArea) {
+  public void setPlantedArea(Double plantedArea) {
     this.plantedArea = plantedArea;
   }
 

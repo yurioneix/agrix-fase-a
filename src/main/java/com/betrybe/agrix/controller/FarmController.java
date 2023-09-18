@@ -1,11 +1,13 @@
 package com.betrybe.agrix.controller;
 
+import com.betrybe.agrix.controller.dto.CropCreationDto;
 import com.betrybe.agrix.controller.dto.CropResponseDto;
 import com.betrybe.agrix.controller.dto.FarmCreationDto;
 import com.betrybe.agrix.controller.dto.FarmDto;
 import com.betrybe.agrix.model.entities.Crop;
 import com.betrybe.agrix.model.entities.Farm;
 import com.betrybe.agrix.model.repositories.FarmRepository;
+import com.betrybe.agrix.service.CropService;
 import com.betrybe.agrix.service.FarmService;
 import com.betrybe.agrix.service.exception.CropNotFoundException;
 import com.betrybe.agrix.service.exception.FarmNotFoundException;
@@ -30,12 +32,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/farms")
 public class FarmController {
   private final FarmService farmService;
-  private final FarmRepository farmRepository;
+
+  private final CropService cropService;
 
   @Autowired
-  public FarmController(FarmService farmService, FarmRepository farmRepository) {
+  public FarmController(
+      FarmService farmService,
+      CropService cropService
+  ) {
     this.farmService = farmService;
-    this.farmRepository = farmRepository;
+    this.cropService = cropService;
   }
 
   /**
@@ -86,9 +92,7 @@ public class FarmController {
    */
   @PostMapping()
   public ResponseEntity<Farm> createFarm(@RequestBody FarmCreationDto farmCreationDto) {
-    Farm farmDtoToModel = ModelDtoConverter.dtoToModel(farmCreationDto);
-
-    Farm newFarm = farmService.createFarm(farmDtoToModel);
+    Farm newFarm = farmService.createFarm(farmCreationDto);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(newFarm);
   }
@@ -99,16 +103,21 @@ public class FarmController {
   @PostMapping("/{farmId}/crops")
   public ResponseEntity<CropResponseDto> createCropByFarmId(
       @PathVariable Long farmId,
-      @RequestBody Crop crop
+      @RequestBody CropCreationDto cropCreationDto
   ) {
 
     Optional<Farm> optionalFarm = farmService.getFarmById(farmId);
+
+    Crop crop = new Crop();
+    crop.setName(cropCreationDto.name());
+    crop.setPlantedArea(cropCreationDto.plantedArea());
 
     if (optionalFarm.isEmpty()) {
       throw new FarmNotFoundException();
     }
 
-    farmService.createCropByFarmId(farmId, crop);
+    crop.setFarm(optionalFarm.get());
+    cropService.saveCrop(crop);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(new CropResponseDto(
         crop.getId(),

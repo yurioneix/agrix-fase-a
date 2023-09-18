@@ -1,10 +1,10 @@
 package com.betrybe.agrix.service;
 
+import com.betrybe.agrix.controller.dto.FarmCreationDto;
 import com.betrybe.agrix.model.entities.Crop;
 import com.betrybe.agrix.model.entities.Farm;
 import com.betrybe.agrix.model.repositories.CropRepository;
 import com.betrybe.agrix.model.repositories.FarmRepository;
-import com.betrybe.agrix.service.exception.CropNotFoundException;
 import com.betrybe.agrix.service.exception.FarmNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +20,10 @@ public class FarmService {
   private CropRepository cropRepository;
 
   @Autowired
-  public FarmService(FarmRepository farmRepository, CropRepository cropRepository) {
+  public FarmService(
+      FarmRepository farmRepository,
+      CropRepository cropRepository
+  ) {
     this.farmRepository = farmRepository;
     this.cropRepository = cropRepository;
   }
@@ -40,7 +43,15 @@ public class FarmService {
     return farmRepository.findById(id);
   }
 
-  public Farm createFarm(Farm farm) {
+  /**
+   * Método de criação de uma fazenda.
+   */
+  public Farm createFarm(FarmCreationDto farmCreationDto) {
+    Farm farm = new Farm();
+
+    farm.setName(farmCreationDto.name());
+    farm.setSize(farmCreationDto.size());
+
     return farmRepository.save(farm);
   }
 
@@ -68,6 +79,8 @@ public class FarmService {
     Farm farm = optionalFarm.get();
 
     cropRepository.save(crop);
+    farm.getCrops().add(crop);
+    farmRepository.save(farm);
 
     crop.setFarm(farm);
 
