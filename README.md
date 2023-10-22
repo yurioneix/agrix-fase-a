@@ -233,9 +233,9 @@ Neste projeto você deverá desenvolver uma aplicação Spring Boot com algumas 
 ## Pastas/arquivos desenvolvidos por mim 
 
 ```bash
-  src/main/java/com.betrybe.com.controller
-  src/main/java/com.betrybe.com.model
-  src/main/java/com.betrybe.com.service
-  src/main/java/com.betrybe.com.util
+  src/main/java/com.betrybe.agrix.controller
+  src/main/java/com.betrybe.agrix.model
+  src/main/java/com.betrybe.agrix.service
+  src/main/java/com.betrybe.agrix.util
 ```
 
